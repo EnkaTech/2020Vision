@@ -92,7 +92,7 @@ def main():
 
     camera = cs.startAutomaticCapture()
 
-    camera.setResolution(640, 480)
+    camera.setResolution(480, 360)
 
     proc_table = NetworkTables.getTable("imgproc")
 
@@ -100,10 +100,10 @@ def main():
     cvSink = cs.getVideo()
 
     # (optional) Setup a CvSource. This will send images back to the Dashboard
-    outputStream = cs.putVideo("Result", 640, 480)
+    outputStream = cs.putVideo("Result", 480, 360)
 
     # Allocating new images is very expensive, always try to preallocate
-    img = np.zeros(shape=(480, 640, 3), dtype=np.uint8)
+    img = np.zeros(shape=(360, 480, 3), dtype=np.uint8)
 
     while True:
         # Tell the CvSink to grab a frame from the camera and put it
