@@ -82,8 +82,10 @@ def calculate_errors(contours):
 
     #TODO z ekseninde hata hesabı
     z_error = 0
+    centerpoint = (center1 + center2)/2
     #Targetların ekran merkezine olan uzaklığı arasındaki fark -> Y eksenindeki hata
-    y_error = (240-center1) + (240-center2)
+    y_error = 240 - centerpoint
+    
     return True, z_error, y_error
 
 def main():
