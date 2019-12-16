@@ -77,16 +77,18 @@ def calculate_errors(contours):
     #Targetların ağırlık merkezini bul
     M1 = cv2.moments(box1)
     M2 = cv2.moments(box2)
-    center1 = int(M1['m10']/M1['m00'])
-    center2 = int(M2['m10']/M2['m00'])
-
-    #TODO z ekseninde hata hesabı
-    z_error = 0
-    centerpoint = (center1 + center2)/2
+    center1x = int(M1['m10']/M1['m00'])
+    center2x = int(M2['m10']/M2['m00'])
+    center1y = int(M1["m01"] / M1["m00"])
+    center2y = int(M2["m01"] / M2["m00"])
+    centerpointx = (center1x + center2x)/2
+    centerpointy = (center1y + center2y)/2
     #Targetların ekran merkezine olan uzaklığı arasındaki fark -> Y eksenindeki hata
-    y_error = 240 - centerpoint
+    anglediff = (centerpointy - 180) * 43.30
+    #further code will be added
+    y_error = 320 - centerpointx
     
-    return True, z_error, y_error
+    return True,  y_error
 
 def main():
     cs = CameraServer.getInstance()
@@ -94,7 +96,7 @@ def main():
 
     camera = cs.startAutomaticCapture()
 
-    camera.setResolution(480, 360)
+    camera.setResolution(640, 360)
 
     proc_table = NetworkTables.getTable("imgproc")
 
@@ -102,10 +104,10 @@ def main():
     cvSink = cs.getVideo()
 
     # (optional) Setup a CvSource. This will send images back to the Dashboard
-    outputStream = cs.putVideo("Result", 480, 360)
+    outputStream = cs.putVideo("Result", 640, 360)
 
     # Allocating new images is very expensive, always try to preallocate
-    img = np.zeros(shape=(360, 480, 3), dtype=np.uint8)
+    img = np.zeros(shape=(640, 360, 3), dtype=np.uint8)
 
     while True:
         # Tell the CvSink to grab a frame from the camera and put it
@@ -122,16 +124,14 @@ def main():
         goodContours = list(filter(cnt_test, contours))
         if len(goodContours) >= 2:
             result = rectangle(img, goodContours)
-            #success, r_error, h_error = calculate_errors(goodContours)
+            success, y_error = calculate_errors(goodContours)
 
             # Sonuçları robota bildir
-            proc_table.putBoolean('Target algılandı', True)
-            #proc_table.putNumber('Heading', r_error)
-            #proc_table.putNumber('Horizontal error', h_error)
+            proc_table.putBoolean('Target algılandı', True)    
+            proc_table.putNumber('Horizontal error', y_error)
         else:
             result = img
             proc_table.putBoolean('Target algılandı', False)
-            proc_table.putNumber('Heading', 0)
             proc_table.putNumber('Horizontal error', 0)
         
 
