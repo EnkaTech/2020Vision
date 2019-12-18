@@ -64,7 +64,7 @@ def calculate_errors(contours):
         cnt1 = contours[0]
         cnt2 = contours[1]
     except IndexError:
-        return False, 0, 0
+        return False, 0
     #Target etrafında dikdörtgensel bölge oluştur
     rect1 = cv2.minAreaRect(cnt1)
     box_p1 = cv2.boxPoints(rect1)
@@ -88,7 +88,7 @@ def calculate_errors(contours):
     #further code will be added
     y_error = 320 - centerpointx
     
-    return True,  y_error
+    return True, y_error
 
 def main():
     cs = CameraServer.getInstance()
