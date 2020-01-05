@@ -51,13 +51,10 @@ def cnt_test(cnt):
     width  = min(rect[1][0], rect[1][1])
     height = max(rect[1][0], rect[1][1])
     ratio = width/height
-    if cv2.contourArea(cnt) > 200 and ratio > 0.35 and ratio < 0.6:
+    if cv2.contourArea(cnt) > 200 and ratio > 0.35 and ratio < 1.2:
         return True
     else:
         return False
-
-def maap(x, in_min,  in_max,  out_min,  out_max): 
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
 def calculate_errors(contours):
     try:
@@ -104,7 +101,7 @@ def main():
     cvSink = cs.getVideo()
 
     # (optional) Setup a CvSource. This will send images back to the Dashboard
-    outputStream = cs.putVideo("Result", 640, 360)
+    outputStream = cs.putVideo("Result", 120, 90)
 
     # Allocating new images is very expensive, always try to preallocate
     img = np.zeros(shape=(640, 360, 3), dtype=np.uint8)
@@ -123,7 +120,8 @@ def main():
         contours = detect_targets(img)
         goodContours = list(filter(cnt_test, contours))
         if len(goodContours) >= 2:
-            result = rectangle(img, goodContours)
+            result1 = rectangle(img, goodContours)
+            result = img
             success, y_error = calculate_errors(goodContours)
 
             # Sonuçları robota bildir
