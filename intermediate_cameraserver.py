@@ -11,7 +11,7 @@
 
 import cv2
 import numpy as np
-
+import math  
 from cscore import CameraServer
 
 def detect_targets(capture):
@@ -67,11 +67,15 @@ def calculate_errors(contours):
     center1x = int(M1['m10']/M1['m00'])
     center1y = int(M1["m01"] / M1["m00"])
     #Targetların ekran merkezine olan uzaklığı arasındaki fark -> Y eksenindeki hata
-    anglediff = (center1y - 180) * 43.30
+    cameraheight = 40
+    targetheight = 300
+    cameraangle = 10
+    targetangle = (180 - center1y) / 180 * 43.30
+    distance = (targetheight-cameraheight)/ math.tan(cameraangle+targetangle)
     #further code will be added
     y_error = 320 - center1x
     
-    return True, y_error
+    return True, y_error,distance
 
 def main():
     cs = CameraServer.getInstance()
@@ -108,10 +112,11 @@ def main():
         goodContours = list(filter(cnt_test, contours))
         if len(goodContours) >= 1:
             rectangledresult = rectangle(dashboardimg, goodContours)        
-            success, y_error = calculate_errors(goodContours)
+            success, y_error,distance = calculate_errors(goodContours)
             # Sonuçları robota bildir
             proc_table.putBoolean('Target algılandı', True)    
             proc_table.putNumber('Horizontal error', y_error)
+            proc_table.putNumber('Horizontal error', distance)
         else:
             proc_table.putBoolean('Target algılandı', False)
             proc_table.putNumber('Horizontal error', 0)
