@@ -101,15 +101,16 @@ def main():
     cvSink = cs.getVideo()
 
     # (optional) Setup a CvSource. This will send images back to the Dashboard
-    outputStream = cs.putVideo("Result", 120, 90)
+    outputStream = cs.putVideo("LQimg", 120, 90)
 
     # Allocating new images is very expensive, always try to preallocate
-    img = np.zeros(shape=(640, 360, 3), dtype=np.uint8)
-
+    imgHQ = np.zeros(shape=(640, 360, 3), dtype=np.uint8)
+    imgLQ = np.zeros(shape=(120, 90, 3), dtype=np.uint8)
     while True:
         # Tell the CvSink to grab a frame from the camera and put it
         # in the source image.  If there is an error notify the output.
-        time, img = cvSink.grabFrame(img)
+        time, processingimg = cvSink.grabFrame(imgHQ)
+        _, dashboardimg =  cvSink.grabFrame(imgLQ)
         if time == 0:
             # Send the output the error.
             outputStream.notifyError(cvSink.getError())
@@ -117,24 +118,21 @@ def main():
             continue
 
         # Put a rectangle on the image
-        contours = detect_targets(img)
+        contours = detect_targets(processingimg)
         goodContours = list(filter(cnt_test, contours))
-        if len(goodContours) >= 2:
-            result1 = rectangle(img, goodContours)
-            result = img
+        if len(goodContours) >= 1:
+            rectangledresult = rectangle(dashboardimg, goodContours)        
             success, y_error = calculate_errors(goodContours)
-
             # Sonuçları robota bildir
             proc_table.putBoolean('Target algılandı', True)    
             proc_table.putNumber('Horizontal error', y_error)
         else:
-            result = img
             proc_table.putBoolean('Target algılandı', False)
             proc_table.putNumber('Horizontal error', 0)
         
 
         # Give the output stream a new image to display
-        outputStream.putFrame(result)
+        outputStream.putFrame(rectangledresult)
 
 
 if __name__ == "__main__":
