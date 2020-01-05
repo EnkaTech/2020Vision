@@ -32,18 +32,13 @@ def detect_targets(capture):
 def rectangle(img, contours):
     try:
         cnt1 = contours[0]
-        cnt2 = contours[1]
     except IndexError:
         return img
     #Targetları dikdörtgen içine al
     rect1 = cv2.minAreaRect(cnt1)
     box_p1 = cv2.boxPoints(rect1)
     box1 = np.int0(box_p1)
-    rect2 = cv2.minAreaRect(cnt2)
-    box_p2 = cv2.boxPoints(rect2)
-    box2 = np.int0(box_p2)
     cv2.drawContours(img,[box1],0,(0,0,255),2)
-    cv2.drawContours(img,[box2],0,(0,0,255),2)
     return img
 
 def cnt_test(cnt):
@@ -59,7 +54,6 @@ def cnt_test(cnt):
 def calculate_errors(contours):
     try:
         cnt1 = contours[0]
-        cnt2 = contours[1]
     except IndexError:
         return False, 0
     #Target etrafında dikdörtgensel bölge oluştur
@@ -67,23 +61,15 @@ def calculate_errors(contours):
     box_p1 = cv2.boxPoints(rect1)
     box1 = np.int0(box_p1)
 
-    rect2 = cv2.minAreaRect(cnt2)
-    box_p2 = cv2.boxPoints(rect2)
-    box2 = np.int0(box_p2)
-
     #Targetların ağırlık merkezini bul
     M1 = cv2.moments(box1)
     M2 = cv2.moments(box2)
     center1x = int(M1['m10']/M1['m00'])
-    center2x = int(M2['m10']/M2['m00'])
     center1y = int(M1["m01"] / M1["m00"])
-    center2y = int(M2["m01"] / M2["m00"])
-    centerpointx = (center1x + center2x)/2
-    centerpointy = (center1y + center2y)/2
     #Targetların ekran merkezine olan uzaklığı arasındaki fark -> Y eksenindeki hata
-    anglediff = (centerpointy - 180) * 43.30
+    anglediff = (center1y - 180) * 43.30
     #further code will be added
-    y_error = 320 - centerpointx
+    y_error = 320 - center1x
     
     return True, y_error
 
