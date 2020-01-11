@@ -53,7 +53,6 @@ def calculate_errors(contours):
 
     #Targetların ağırlık merkezini bul
     M1 = cv2.moments(box1)
-    M2 = cv2.moments(box2)
     center1x = int(M1['m10']/M1['m00'])
     center1y = int(M1["m01"] / M1["m00"])
     #Targetların ekran merkezine olan uzaklığı arasındaki fark -> Y eksenindeki hata
