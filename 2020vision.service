@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/usr/bin/python3 /opt/vision/main_client.py
+ExecStart=/usr/bin/python3 /opt/vision/main_server.py
 
 [Install]
 WantedBy=multi-user.target

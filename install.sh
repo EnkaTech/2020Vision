@@ -15,7 +15,7 @@ if [[ -d $TARGET ]]; then
     echo "$TARGET already exists as a directory. Replace it?(y/n): "
     read -n 1 ans
     
-    if [[ $ans == "y" ]] || [[ $ans == "Y"]]; then
+    if [[ $ans == "y" ]] || [[ $ans == "Y" ]]; then
 	rm -r $TARGET
     else exit
     fi
