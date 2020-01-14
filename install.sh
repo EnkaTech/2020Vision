@@ -14,10 +14,10 @@ SYSD_DIR="/lib/systemd/system/"
 if [[ -d $TARGET ]]; then
     echo -n "$TARGET already exists as a directory. Replace it? [y/n]: "
     read -n 1 ans
+    echo
     
     if [[ $ans == "y" ]] || [[ $ans == "Y" ]]; then
 	rm -r $TARGET
-	echo
     else exit
     fi
 fi
@@ -39,4 +39,17 @@ sudo chmod 644 "${SYSD_DIR}2020vision.service"
 
 echo "Done!"
 echo "Read the instructions on README for enabling the service"
+
+echo -n "Enable the service now? [y/n]: "
+read -n 1 ans
+echo
+
+if [[ $ans == "y" ]] || [[ $ans == "Y" ]]; then
+    echo "Refreshing systemd:"
+    sudo systemctl daemon-reload
+    echo "Enabling the service"
+    sudo systemctl enable 2020vision.service
+    echo "Done"
+fi
+
 exit 0
