@@ -4,7 +4,7 @@ import math
 
 
 
-def detect_targets(capture):
+def detectTargets(capture):
     #Bir kare al
     # Gürültü kaldırma için gerekli kerneller
     kernel = np.ones((9,9),np.uint8)
@@ -31,7 +31,7 @@ def rectangle(img, contours):
     cv2.drawContours(img,[box1],0,(0,0,255),2)
     return img
 
-def cnt_test(cnt):
+def cntTest(cnt):
     rect = cv2.minAreaRect(cnt)
     width  = min(rect[1][0], rect[1][1])
     height = max(rect[1][0], rect[1][1])
@@ -41,27 +41,27 @@ def cnt_test(cnt):
     else:
         return False
 
-def calculate_errors(contours):
+def calculateErrors(contours):
     try:
         cnt1 = contours[0]
     except IndexError:
         return False, 0
     #Target etrafında dikdörtgensel bölge oluştur
     rect1 = cv2.minAreaRect(cnt1)
-    box_p1 = cv2.boxPoints(rect1)
-    box1 = np.int0(box_p1)
+    boxP1 = cv2.boxPoints(rect1)
+    box1 = np.int0(boxP1)
 
     #Targetların ağırlık merkezini bul
     M1 = cv2.moments(box1)
     center1x = int(M1['m10']/M1['m00'])
     center1y = int(M1["m01"] / M1["m00"])
     #Targetların ekran merkezine olan uzaklığı arasındaki fark -> Y eksenindeki hata
-    cameraheight = 40
-    targetheight = 300
-    cameraangle = 10
-    targetangle = (180 - center1y) / 180 * 43.30
-    distance = (targetheight-cameraheight)/ math.tan(cameraangle+targetangle)
+    cameraHeight = 40
+    targetHeight = 300
+    cameraAngle = 10
+    targetAngle = (180 - center1y) / 180 * 43.30
+    distance = (targetHeight-cameraHeight)/ math.tan(cameraAngle+targetAngle)
     #further code will be added
-    y_error = 320 - center1x
+    yError = 320 - center1x
 
-    return True, y_error, distance
+    return True, yError, distance

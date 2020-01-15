@@ -16,7 +16,7 @@ def main():
 
     camera.setResolution(640, 360)
 
-    proc_table = NetworkTables.getTable("imgproc")
+    procTable = NetworkTables.getTable("imgproc")
 
     # Get a CvSink. This will capture images from the camera
     cvSink = cs.getVideo()
@@ -39,19 +39,19 @@ def main():
             continue
 
         # Find suitable contours
-        contours = detect_targets(processingImg)
-        goodContours = list(filter(cnt_test, contours))
+        contours = detectTargets(processingImg)
+        goodContours = list(filter(cntTest, contours))
         if len(goodContours) >= 1:
             rectangledResult = rectangle(processingImg, goodContours)        
-            success, yError,distance = calculate_errors(goodContours)
+            success, yError,distance = calculateErrors(goodContours)
             # Sonuçları robota bildir
-            proc_table.putBoolean('Target algılandı', True)    
-            proc_table.putNumber('Horizontal error', yError)
-            proc_table.putNumber('Horizontal error', distance)
+            procTable.putBoolean('Target algılandı', True)    
+            procTable.putNumber('Horizontal error', yError)
+            procTable.putNumber('Horizontal error', distance)
         else:
             rectangledResult = processingImg
-            proc_table.putBoolean('Target algılandı', False)
-            proc_table.putNumber('Horizontal error', 0)
+            procTable.putBoolean('Target algılandı', False)
+            procTable.putNumber('Horizontal error', 0)
 
         imgLQ = cv2.resize(rectangledResult, (120, 90))
 
