@@ -30,8 +30,7 @@ def main():
     while True:
         # Tell the CvSink to grab a frame from the camera and put it
         # in the source image.  If there is an error notify the output.
-        time, processingimg = cvSink.grabFrame(imgHQ)
-        _, dashboardimg =  cvSink.grabFrame(imgLQ)
+        time, processingImg = cvSink.grabFrame(imgHQ)
         if time == 0:
             # Send the output the error.
             outputStream.notifyError(cvSink.getError())
@@ -39,24 +38,24 @@ def main():
             continue
 
         # Find suitable contours
-        contours = detect_targets(processingimg)
+        contours = detect_targets(processingImg)
         goodContours = list(filter(cnt_test, contours))
         if len(goodContours) >= 1:
-            rectangledresult = rectangle(processingimg, goodContours)        
-            success, y_error,distance = calculate_errors(goodContours)
+            rectangledResult = rectangle(processingImg, goodContours)        
+            success, yError,distance = calculate_errors(goodContours)
             # Sonuçları robota bildir
             proc_table.putBoolean('Target algılandı', True)    
-            proc_table.putNumber('Horizontal error', y_error)
+            proc_table.putNumber('Horizontal error', yError)
             proc_table.putNumber('Horizontal error', distance)
         else:
-            rectangledresult = processingimg
+            rectangledResult = processingImg
             proc_table.putBoolean('Target algılandı', False)
             proc_table.putNumber('Horizontal error', 0)
 
-        scaledImage = cv2.resize(rectangledresult, (120, 90))
+        imgLQ = cv2.resize(rectangledResult, (120, 90))
 
         # Give the output stream a new image to display
-        outputStream.putFrame(scaledImage)
+        outputStream.putFrame(imgLQ)
 
 
 if __name__ == "__main__":
