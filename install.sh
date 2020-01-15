@@ -46,9 +46,9 @@ echo
 
 if [[ $ans == "y" ]] || [[ $ans == "Y" ]]; then
     echo "Refreshing systemd:"
-    sudo systemctl daemon-reload
+    systemctl daemon-reload
     echo "Enabling the service"
-    sudo systemctl enable 2020vision.service
+    systemctl enable 2020vision.service
     echo "Done"
 fi
 
