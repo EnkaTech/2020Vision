@@ -42,19 +42,21 @@ def main():
         contours = detect_targets(processingimg)
         goodContours = list(filter(cnt_test, contours))
         if len(goodContours) >= 1:
-            rectangledresult = rectangle(dashboardimg, goodContours)        
+            rectangledresult = rectangle(processingimg, goodContours)        
             success, y_error,distance = calculate_errors(goodContours)
             # Sonuçları robota bildir
             proc_table.putBoolean('Target algılandı', True)    
             proc_table.putNumber('Horizontal error', y_error)
             proc_table.putNumber('Horizontal error', distance)
         else:
+            rectangledresult = processingimg
             proc_table.putBoolean('Target algılandı', False)
             proc_table.putNumber('Horizontal error', 0)
-        
+
+        scaledImage = cv2.resize(rectangledresult, (120, 90))
 
         # Give the output stream a new image to display
-        outputStream.putFrame(rectangledresult)
+        outputStream.putFrame(scaledImage)
 
 
 if __name__ == "__main__":
