@@ -25,6 +25,7 @@ def main():
     outputStream = cs.putVideo("LQimg", 120, 90)
 
     # Allocating new images is very expensive, always try to preallocate
+    # TODO generate LQ image with cv2.resize()
     imgHQ = np.zeros(shape=(640, 360, 3), dtype=np.uint8)
     imgLQ = np.zeros(shape=(120, 90, 3), dtype=np.uint8)
     while True:
@@ -65,6 +66,6 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
     # Join an existing NetworkTables instance (on RoboRIO)
-
     NetworkTables.initialize(server="10.69.85.2")
+    # TODO call main() after confirming connection
     main()
