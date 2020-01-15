@@ -34,6 +34,7 @@ def main():
         if time == 0:
             # Send the output the error.
             outputStream.notifyError(cvSink.getError())
+            logging.debug(cvSink.getError())
             # skip the rest of the current iteration
             continue
 
