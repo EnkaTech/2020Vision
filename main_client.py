@@ -25,37 +25,38 @@ def main():
     outputStream = cs.putVideo("LQimg", 120, 90)
 
     # Allocating new images is very expensive, always try to preallocate
-    # TODO generate LQ image with cv2.resize()
     imgHQ = np.zeros(shape=(640, 360, 3), dtype=np.uint8)
     imgLQ = np.zeros(shape=(120, 90, 3), dtype=np.uint8)
     while True:
         # Tell the CvSink to grab a frame from the camera and put it
         # in the source image.  If there is an error notify the output.
-        time, processingimg = cvSink.grabFrame(imgHQ)
-        _, dashboardimg =  cvSink.grabFrame(imgLQ)
+        time, processingImg = cvSink.grabFrame(imgHQ)
         if time == 0:
             # Send the output the error.
             outputStream.notifyError(cvSink.getError())
+            logging.debug(cvSink.getError())
             # skip the rest of the current iteration
             continue
 
         # Find suitable contours
-        contours = detect_targets(processingimg)
+        contours = detect_targets(processingImg)
         goodContours = list(filter(cnt_test, contours))
         if len(goodContours) >= 1:
-            rectangledresult = rectangle(dashboardimg, goodContours)        
-            success, y_error,distance = calculate_errors(goodContours)
+            rectangledResult = rectangle(processingImg, goodContours)        
+            success, yError,distance = calculate_errors(goodContours)
             # Sonuçları robota bildir
             proc_table.putBoolean('Target algılandı', True)    
-            proc_table.putNumber('Horizontal error', y_error)
+            proc_table.putNumber('Horizontal error', yError)
             proc_table.putNumber('Horizontal error', distance)
         else:
+            rectangledResult = processingImg
             proc_table.putBoolean('Target algılandı', False)
             proc_table.putNumber('Horizontal error', 0)
-        
+
+        imgLQ = cv2.resize(rectangledResult, (120, 90))
 
         # Give the output stream a new image to display
-        outputStream.putFrame(rectangledresult)
+        outputStream.putFrame(imgLQ)
 
 
 if __name__ == "__main__":
@@ -63,7 +64,7 @@ if __name__ == "__main__":
     # To see messages from networktables, you must setup logging
 
 
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(filename="/tmp/vision.log", level=logging.DEBUG)
 
     # Join an existing NetworkTables instance (on RoboRIO)
     NetworkTables.initialize(server="10.69.85.2")
