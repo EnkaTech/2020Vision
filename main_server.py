@@ -63,7 +63,7 @@ if __name__ == "__main__":
     # To see messages from networktables, you must setup logging
 
 
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(filename="/tmp/vision.log", level=logging.DEBUG)
 
     # Create a new NetworkTables instance on the network
 
