@@ -4,7 +4,7 @@ After=multi-user.target network-online.target
 
 [Service]
 Type=idle
-ExecStart=/usr/bin/python3 /opt/2020vision/main_server.py
+ExecStart=/usr/bin/python3 /opt/2020vision/main_client.py
 
 [Install]
 WantedBy=multi-user.target
