@@ -68,4 +68,15 @@ if [[ $ans == "y" ]] || [[ $ans == "Y" ]]; then
     echo "Done"
 fi
 
+echo -n "Start the service now? [y/n]: "
+read -n 1 ans
+echo
+
+if [[ $ans == "y" ]] || [[ $ans == "Y" ]]; then
+    systemctl start 2020vision.service
+else exit
+fi
+
+
+
 exit 0

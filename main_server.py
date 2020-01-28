@@ -47,7 +47,7 @@ def main():
             # Sonuçları robota bildir
             procTable.putBoolean('Target algılandı', True)    
             procTable.putNumber('Horizontal error', yError)
-            procTable.putNumber('Horizontal error', distance)
+            procTable.putNumber('Distance', distance)
         else:
             rectangledResult = processingImg
             procTable.putBoolean('Target algılandı', False)

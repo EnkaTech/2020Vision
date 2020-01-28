@@ -61,6 +61,6 @@ def calculateErrors(contours):
     cameraAngle = 10
     targetAngle = (180 - center1y) / 180 * 43.30
     distance = (targetHeight-cameraHeight)/ math.tan(cameraAngle+targetAngle)
-    yError = 60 - center1x
+    yError = 320 - center1x
 
     return True, yError, distance
